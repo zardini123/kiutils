@@ -647,7 +647,9 @@ class Footprint():
     """The ``libraryLink`` attribute defines the link to footprint library of the footprint.
     This only applies to footprints defined in the board file format."""
 
-    version: Optional[str] = None
+    # Date is the day after last use of old fp_arc formatting
+    #   Source: https://gitlab.com/kicad/code/kicad/-/blob/master/pcbnew/plugins/kicad/pcb_plugin.h#L136
+    version: Optional[str] = "20210926"
     """The ``version`` token attribute defines the symbol library version using the YYYYMMDD date format"""
 
     generator: Optional[str] = None
