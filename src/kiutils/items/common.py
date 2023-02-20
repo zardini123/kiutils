@@ -216,7 +216,7 @@ class Stroke():
     - ``dash``, ``dash_dot``, ``dash_dot_dot`` (version 7), ``dot``, ``default``, ``solid``
     """
 
-    color: ColorRGBA = field(default_factory=lambda: ColorRGBA())
+    color: Optional[ColorRGBA] = None
     """The ``color`` token attributes define the line red, green, blue, and alpha color settings"""
 
     @classmethod
@@ -227,13 +227,14 @@ class Stroke():
             - exp (list): Part of parsed S-Expression ``(stroke ...)``
 
         Raises:
-            - Exception: When given parameter's type is not a list or the list is not 4 items long
+            - Exception: When given parameter's type is not a list
             - Exception: When the first item of the list is not stroke
 
         Returns:
             - Stroke: Object of the class initialized with the given S-Expression
         """
-        if not isinstance(exp, list) or len(exp) != 4:
+        # TODO: Color can be not present.  How to do error handling for type checking?
+        if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
 
         if exp[0] != 'stroke':
@@ -260,7 +261,12 @@ class Stroke():
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
-        expression = f'{indents}(stroke (width {self.width}) (type {self.type}) {self.color.to_sexpr()}){endline}'
+
+        expression = f'{indents}(stroke (width {self.width}) (type {self.type})'
+        if self.color is not None:
+            expression += f' {self.color.to_sexpr()}'
+        
+        expression += f'){endline}'
         return expression
 
 
